@@ -1,0 +1,1 @@
+document.getElementById("offices").innerHTML=Array.from({length:10},(_,i)=>`<a class="office-card" href="/consultorio/${i+1}"><span class="arrow">↗</span><span class="num">${String(i+1).padStart(2,"0")}</span><span class="label">Consultório</span></a>`).join("");

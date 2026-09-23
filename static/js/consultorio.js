@@ -1,0 +1,12 @@
+const officeId=Number(location.pathname.split("/").pop());
+document.getElementById("office-title").textContent=`Consultório ${String(officeId).padStart(2,"0")}`;
+const types=["Água","Valo","Anestesia","Gazes","Suporte presencial","Limpeza","Abridor"];
+const typeContainer=document.getElementById("types");
+typeContainer.innerHTML=types.map(t=>`<button class="type-button" data-type="${esc(t)}"><span class="emoji">${icons[t]}</span><strong>${esc(t)}</strong></button>`).join("");
+let calls=[];
+const list=document.getElementById("active-calls");
+function render(){const active=calls.filter(c=>c.status!=="concluido").sort((a,b)=>b.id-a.id);document.getElementById("active-count").textContent=active.length;list.innerHTML=active.length?active.map(c=>`<article class="dentist-call"><div class="call-info"><div class="call-room">Chamado #${c.id}</div><div class="call-name">${icons[c.tipo]||"•"} ${esc(c.tipo)}</div><div class="call-sub">Solicitado há ${age(c.data_hora_criacao)}${c.auxiliar?` · ${esc(c.auxiliar)} está atendendo`:" · Aguardando atendimento"}</div></div><span class="status-pill ${c.status}">${statusLabel(c.status)}</span><button class="complete-button" data-complete="${c.id}">✓ Concluído</button></article>`).join(""):'<div class="empty">Nenhum chamado ativo. Quando precisar, selecione uma solicitação acima.</div>'}
+async function refresh(){calls=await api(`/api/solicitacoes?consultorio_id=${officeId}`);render()}
+typeContainer.addEventListener("click",async e=>{const b=e.target.closest("button[data-type]");if(!b)return;b.disabled=true;try{const call=await api("/api/solicitacoes",{method:"POST",body:JSON.stringify({consultorio_id:officeId,tipo:b.dataset.type})});calls.unshift(call);render();const f=document.getElementById("feedback");f.textContent=`${icons[call.tipo]} ${call.tipo} enviado à equipe.`;f.classList.remove("hidden");setTimeout(()=>f.classList.add("hidden"),3500)}catch(err){alert(err.message)}finally{b.disabled=false}});
+list.addEventListener("click",async e=>{const b=e.target.closest("[data-complete]");if(!b)return;b.disabled=true;try{const call=await api(`/api/solicitacoes/${b.dataset.complete}/concluir`,{method:"POST"});calls=calls.map(c=>c.id===call.id?call:c);render()}catch(err){alert(err.message)}finally{b.disabled=false}});
+refresh().catch(console.error);connectLive(e=>{if(e.event==="snapshot")calls=e.requests.filter(c=>c.consultorio_id===officeId);else{const i=calls.findIndex(c=>c.id===e.request.id);if(i<0)calls.push(e.request);else calls[i]=e.request}render()});setInterval(render,1000);
