@@ -2,6 +2,32 @@
 
 Sistema web para comunicação de chamados entre consultórios odontológicos e auxiliares. Cada solicitação é salva como um registro próprio em SQLite e publicada imediatamente aos painéis conectados por WebSocket.
 
+O sistema inclui uma tela inicial com os dez consultórios, solicitações independentes por sala, painel das auxiliares com atualização em tempo real, identificação opcional da auxiliar que assumiu o atendimento, conclusão feita pelo dentista e consulta de histórico e indicadores.
+
+## Imagens do sistema
+
+As capturas abaixo estão versionadas na pasta [`BancoDeImagem - Chamador`](BancoDeImagem%20-%20Chamador/).
+
+### Seleção dos consultórios
+
+![Tela inicial com os dez consultórios](BancoDeImagem%20-%20Chamador/inicio-consultorios.png)
+
+### Tela do dentista sem chamados ativos
+
+![Tela do consultório sem chamados ativos](BancoDeImagem%20-%20Chamador/consultorio-sem-chamados.png)
+
+### Vários chamados no mesmo consultório
+
+![Tela do consultório com chamados simultâneos](BancoDeImagem%20-%20Chamador/consultorio-com-chamados.png)
+
+### Painel das auxiliares
+
+![Painel das auxiliares com chamados em tempo real](BancoDeImagem%20-%20Chamador/painel-auxiliares.png)
+
+### Histórico e indicadores
+
+![Tela de histórico e indicadores](BancoDeImagem%20-%20Chamador/historico-indicadores.png)
+
 ## Requisitos
 
 - Python 3.10 ou superior
@@ -53,6 +79,7 @@ templates/     Páginas HTML
 static/css/    Estilos responsivos e componentes visuais
 static/js/     Interface, WebSocket, som e chamadas à API
 tests/         Testes do fluxo de chamados
+BancoDeImagem - Chamador/ Capturas das telas do sistema
 ```
 
 ## Próximas melhorias
